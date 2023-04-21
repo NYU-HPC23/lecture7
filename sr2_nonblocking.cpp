@@ -20,9 +20,9 @@ int main(int argc, char *argv[]) {
     MPI_Irecv(&message_in,  1, MPI_INT, 2, 999, MPI_COMM_WORLD, &request_in);
     MPI_Isend(&message_out, 1, MPI_INT, 2, 999, MPI_COMM_WORLD, &request_out);
 
+    MPI_Wait(&request_in, &status);
     printf("Rank %d received %d\n", rank, message_in);
 
-    MPI_Wait(&request_in, &status);
     MPI_Wait(&request_out, &status);
   } else if (rank == 2) {
     int message_out = 80;
@@ -31,9 +31,10 @@ int main(int argc, char *argv[]) {
     MPI_Irecv(&message_in,  1, MPI_INT, 0, 999, MPI_COMM_WORLD, &request_in2);
     MPI_Isend(&message_out, 1, MPI_INT, 0, 999, MPI_COMM_WORLD, &request_out2);
 
-    printf("Rank %d received %d\n", rank, message_in);
     MPI_Wait(&request_in2, &status2);
     MPI_Wait(&request_out2, &status2);
+    printf("Rank %d received %d\n", rank, message_in);
+
   }
 
   MPI_Finalize();
